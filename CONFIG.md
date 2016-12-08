@@ -11,7 +11,7 @@
 容量
     L1 Cache不超过2MB
     L1: 8种设置
-        16KB - 2^14 Byte
+        8KB - 2^13 Byte
         ...
         2MB - 2^21 Byte
     L2:

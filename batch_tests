@@ -1,7 +1,31 @@
-I=1
+#!/bin/bash
+
+# Only L1
+
+enable_l2=0
+enable_l3=0
+
 for J in {1..7}
 do
-  echo $I
-  ./sim ./trace/1.trace 0 0 0 100 2097152 64 $I 0 4 262144 64 8 3 5 0 0 0 0 0
+	cache_size_L1
+	block_size_L1
+	associativity_L1
+
+# get latency
+  l1_latency=`./cacti/cacti $cache_size_L1 $block_size_L1 $associativity_L1`
+
+# get
+  ./sim ./trace/1.trace 0 0 0 100 \
+  	$cache_size_L1 $block_size_L1 $associativity_L1 0 4 \
+  	0 0 0 0 0 \
+  	0 0 0 0 0
   I=$(($I*2))
 done
+
+
+# L1 & L2
+
+# enable_l2=1
+# enable_l3=0
+
+# L1 & L2 & L3

@@ -97,7 +97,7 @@ int main(int argc,char *argv[])
 	 
   int cycle;
   cycle = ceil(2000000000*result2.access_time); 
-  cout << result2.access_time<<" "<< cycle<< endl;
+  cout << cycle<< endl;
   return 0;
 }
 

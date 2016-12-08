@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -9,10 +10,13 @@
 using namespace std;
 
 
+#define IS_CACHE 1
+#define IS_MEM 0
+
 const int size =  32 * KB;               //输入以byte为单位
 const int block = 128;
 const int associativity = 1;
-
+const int HZ = 2000000000;
 
 char * PATH;
 
@@ -52,7 +56,6 @@ void trace(Cache* level1)
 
         int visit_len = 1;  // 我们先假设我们访问缓存时的数据大小总是小于block的大小
         level1->visit(addr, visit_len, r_or_w);
-   
   }
 
   fclose(fp);    //  Maybe wrong
@@ -60,67 +63,151 @@ void trace(Cache* level1)
 //LRU实现：给每个line结构体维护一个lastvisittime（long_int）
 //用constant写读入的参数；
 
+Cache* make_cache(int cache_size,
+                int block_size,
+                int associativity,
+                int bus_time,
+                int hit_time)
+{
+    Cache* cache;
+    StorageStats stats;
+    StorageLatency latency;
+
+    latency.bus_latency = bus_time;
+    latency.hit_latency = hit_time;
+
+    cache = new Cache(cache_size, block_size, associativity, WRITE_BACK_ALLOCATE, LRU);
+    cache->SetStats(stats);
+    cache->SetLatency(latency);
+
+    return cache;
+}
+
+Memory* make_memory(int bus_time, int hit_time)
+{
+    Memory* memory;
+    /****Initialization Aruguments****/    
+    StorageStats stats;
+    StorageLatency mem_latency;
+
+    mem_latency.bus_latency = bus_time;
+    mem_latency.hit_latency = hit_time;
+
+    memory = new Memory();
+    memory->SetStats(stats);
+    memory->SetLatency(mem_latency);
+    /*************************/
+
+    return memory;
+}
+
+void set_memory_hierarchy(Memory* memory,
+            Cache* l1_cache,
+            Cache* l2_cache,
+            Cache* l3_cache){
+
+    if (l2_cache == NULL){
+        l1_cache->SetLower(memory);
+    }else{
+        l1_cache->SetLower(l2_cache);
+        if (l3_cache == NULL){
+            l2_cache->SetLower(memory);
+        }else{
+            l2_cache->SetLower(l3_cache);
+            l3_cache->SetLower(memory);
+        }
+    }
+}
+
+void print_stat(int is_cache, const StorageStats &stats)
+{
+
+    if (is_cache){
+        printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"
+            , stats.access_counter, stats.miss_num
+            , stats.access_time
+            , (double(stats.miss_num)/double(stats.access_counter))
+            , stats.replace_num, stats.access_lower_num);
+    }
+    else{
+        printf("\tMem Access Counter = %d\n\tMem Access Time = %d\n"
+            , stats.access_counter
+            , stats.access_time);
+    }
+
+}
 
 int main(int argc, char  *argv[]) 
 {
-
+    //get Trace Name
     PATH = argv[1];
     /****Initialization Aruguments****/
+    Cache* l1_cache = NULL;
+    Cache* l2_cache = NULL;
+    Cache* l3_cache = NULL;
+    Memory* memory = NULL;
 
-    Memory* mem = new Memory();
+    // get arguments
+    int enable_l2, enable_l3;
+    int cs[3], bs[3], as[3], bt[3], ht[3];
+    int bt_mem, ht_mem;
 
-    StorageStats stats;
+    enable_l2 = atoi(argv[2]); // 0 or 1
+    enable_l3 = atoi(argv[3]); // 0 or 1
+    bt_mem = atoi(argv[4]);
+    ht_mem = atoi(argv[5]);
 
-    StorageLatency mem_latency;
-    mem_latency.bus_latency = 6;
-    mem_latency.hit_latency = 100;
-
-
-    StorageLatency lv1_lentency;
-    lv1_lentency.bus_latency = 0;
-    lv1_lentency.hit_latency = 8;
-
-    
-
-
-    /*************************/
-
-    //*****Simulator's code****/
-    
-
-    Cache*  lv1_cache = new Cache(size, block, associativity, WRITE_BACK_ALLOCATE, LRU);    
-    lv1_cache->SetLower(mem);
-
-    lv1_cache->SetStats(stats);
-    lv1_cache->SetLatency(lv1_lentency);
-
-    mem->SetStats(stats);
-    mem->SetLatency(mem_latency);
+    int cnt=6; //read from argv[5]
+    for (int i=0;i<3;i++){
+        cs[i] = atoi(argv[cnt++]);
+        bs[i] = atoi(argv[cnt++]);
+        as[i] = atoi(argv[cnt++]);
+        bt[i] = atoi(argv[cnt++]);
+        ht[i] = atoi(argv[cnt++]);
+    }
+    //end of getting arguments
 
 
-    trace(lv1_cache);
+    //initialize memory and cache
+    memory = make_memory(bt_mem, ht_mem);
+    l1_cache = make_cache(cs[0], bs[0], as[0], bt[0], ht[0]);
+    if (enable_l2)
+        l2_cache = make_cache(cs[1], bs[1], as[1], bt[1], ht[1]);
+    if (enable_l3)
+        l3_cache = make_cache(cs[2], bs[2], as[2], bt[2], ht[2]);
+
+    set_memory_hierarchy(memory, l1_cache, l2_cache, l3_cache);
+
+    trace(l1_cache);
 
 
     //任何时刻，总访问时间由各个Storage 的 Stats.access_time 之和组成
     //但是只考察cache的命中情况
 
-    StorageStats res_lv1_stats, res_mem_stats;
-    lv1_cache->GetStats(res_lv1_stats);
-    mem->GetStats(res_mem_stats);
-    printf("\naccess_counter = %d\nmiss_num= %d\n\
-            \naccess_time = %d\nmiss_rate:  %f\n\
-            \nreplace_num = %d\naccess_lower_num = %d\n"
-            , res_lv1_stats.access_counter, res_lv1_stats.miss_num
-            , res_lv1_stats.access_time + res_mem_stats.access_time
-            , (double(res_lv1_stats.miss_num)/double(res_lv1_stats.access_counter))
-            , res_lv1_stats.replace_num, res_lv1_stats.access_lower_num);
 
-        printf("\nMem access_counter = %d\n\
-            \nMem access time = %d\n"
-            , res_mem_stats.access_counter
-            , res_mem_stats.access_time);
-    // /*************************/
+    //Print stats
+    printf("STRACE: %s\n", PATH);
 
+    StorageStats stats;
+    cout << "--------" <<endl<<"Memory Stats:"<<endl;
+    memory->GetStats(stats);
+    print_stat(IS_MEM, stats);
+
+    cout << "--------" <<endl<<"L1 Cache Stats:"<<endl;
+    l1_cache->GetStats(stats);
+    print_stat(IS_CACHE, stats);
+
+    if (enable_l2){
+        cout << "--------" <<endl<<"L2 Cache Stats:"<<endl;
+        l2_cache->GetStats(stats);
+        print_stat(IS_CACHE, stats);
+    }
+
+    if (enable_l3){
+        cout << "--------" <<endl<<"L3 Cache Stats:"<<endl;
+        l3_cache->GetStats(stats);
+        print_stat(IS_CACHE, stats);
+    }
 
     return 0;
 }

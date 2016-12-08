@@ -7,8 +7,7 @@ void Cache::visit(uint64_t addr,int len,int read_or_write)
     char *content = new char[len];
     int time = 0;
     int hit = 0;
-
-    HandleRequest(addr, len, read_or_write, content, hit, time);
+    Cache::HandleRequest(addr, len, read_or_write, content, hit, time);
 
     delete [] content;
 }
@@ -21,9 +20,12 @@ void Cache::HandleRequest(uint64_t addr, int bytes, int read,
 
     stats_.access_counter++;
 
+
     // Bypass?
     if (!BypassDecision()) 
     {
+
+
         PartitionAlgorithm();       
 
 
@@ -47,6 +49,7 @@ void Cache::HandleRequest(uint64_t addr, int bytes, int read,
         if (ReplaceDecision(set_index, addr_tag, set_way)) 
         {
             stats_.miss_num++;
+            // printf("ADDR: %x\n", addr);
 
             ReplaceAlgorithm(set_index, addr, bytes, read,
                              content,   hit,  time);
@@ -65,36 +68,10 @@ void Cache::HandleRequest(uint64_t addr, int bytes, int read,
                 if(config_.write_through == WRITE_BACK)
                 {
                     auto& line = mycache_[set_index].set_st[set_way];
-                    if(line.dirty == 1)
-                    {
-                    //replace
-                        
-                        int lower_hit = 0, lower_time = 0;
-                        // write back
-                        uint64_t tmp_addr = line.tag;
-                        tmp_addr = (tmp_addr << SET_BITS) | set_index;
-                        tmp_addr = (tmp_addr << BLOCK_BITS) ;//block 字节对齐
-
-                        lower_->HandleRequest(tmp_addr, config_.block_size, WRITE_OPERATION, 
-                                              line.block, lower_hit, lower_time);
-
-                    //write block, write allocate
-                        line.dirty = 1;
-                        line.tag = (addr >> TAG_OFFSET);
-                        memcpy(line.block, content, config_.block_size);
-
-
-                        // stats_.replace_num ++;
-
-                        // + lower_time by lower level
-                    }
-                    else    // write clean block
-                    {
-                        line.dirty = 1;
-                        line.tag = (addr >> TAG_OFFSET);
-                        memcpy(line.block, content, config_.block_size);
-
-                    }
+                
+                    line.dirty = 1;
+                    line.tag = (addr >> TAG_OFFSET);
+                    memcpy(line.block, content, config_.block_size);
                 }
                 else
                 {
@@ -103,24 +80,25 @@ void Cache::HandleRequest(uint64_t addr, int bytes, int read,
             }
 
             time += latency_.bus_latency + latency_.hit_latency;
-            stats_.access_time += time;
+            stats_.access_time += latency_.hit_latency;
         }
     }
-  // // Prefetch?
-  //   if (PrefetchDecision()) 
-  //   {
-  //       PrefetchAlgorithm();
-  //   } 
-  //   else 
-  //   {
-  //       // Fetch from lower layer
-  //       int lower_hit, lower_time;
-  //       lower_->HandleRequest(addr, bytes, read, content,
-  //                             lower_hit, lower_time);
-  //       hit = 0;
-  //       time += latency_.bus_latency + lower_time;
-  //       stats_.access_time += latency_.bus_latency;
-  //   }
+  // Prefetch?
+    // if (PrefetchDecision()) 
+    // {
+    //     PrefetchAlgorithm();
+    // } 
+    // else 
+    // {
+    //     // Fetch from lower layer
+    //     int lower_hit=0 , lower_time=0;
+
+    //     lower_->HandleRequest(addr, bytes, read, content,
+    //                           lower_hit, lower_time);
+    //     hit = 0;
+    //     time += latency_.bus_latency + lower_time;
+    //     stats_.access_time += latency_.bus_latency;
+    // }
 }
 
 int Cache::BypassDecision()
@@ -204,7 +182,7 @@ void Cache::ReplaceAlgorithm(int set_index, uint64_t addr, int bytes, int read_o
                     }
 
                     time += latency_.bus_latency;
-                    stats_.access_time += time; 
+                    stats_.access_time += latency_.hit_latency;
                     
                     
                     return;
@@ -265,7 +243,7 @@ void Cache::ReplaceAlgorithm(int set_index, uint64_t addr, int bytes, int read_o
             }
 
             time += latency_.bus_latency;
-            stats_.access_time += time;
+            stats_.access_time += latency_.hit_latency;
 
             return;
             break;

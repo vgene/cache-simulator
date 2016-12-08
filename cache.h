@@ -76,12 +76,14 @@ class Cache: public Storage {
     config_.set_num = size_ / (block_ * ass_);
     config_.tag_len = 64-log2(block_)-log2(config_.set_num);   // May improve log2
     
-    printf("Size:%x\n", config_.size);
-    printf("block_size:%x\n", config_.block_size);
-    printf("associativity:%x\n", config_.associativity);
-    printf("set_num:%x\n", config_.set_num);
-    printf("tag_len:%x\n", config_.tag_len);
 
+    // printf("---------\nALL NUMBER IN HEX:\n");
+    // printf("Size:%x\n", config_.size);
+    // printf("block_size:%x\n", config_.block_size);
+    // printf("associativity:%x\n", config_.associativity);
+    // printf("set_num:%x\n", config_.set_num);
+    // printf("tag_len:%x\n", config_.tag_len);
+    // printf("---------\n");
 
     if(policy == WRITE_BACK_ALLOCATE)
     {

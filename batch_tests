@@ -1,0 +1,7 @@
+I=1
+for J in {1..7}
+do
+  echo $I
+  ./sim ./trace/1.trace 0 0 0 100 2097152 64 $I 0 4 262144 64 8 3 5 0 0 0 0 0
+  I=$(($I*2))
+done

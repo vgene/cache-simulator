@@ -30,7 +30,7 @@ void trace(Cache* level1)
     // cout<<b<<addr;
     
     while(!feof(fp)){
-        fscanf(fp,"%c\t%lu\n",&b,&addr);
+        fscanf(fp,"%c %llx\n",&b,&addr);
         /* if(!(isdigit(addr)))
          {
          cout<<"Wrong address!"<<endl;
@@ -50,7 +50,7 @@ void trace(Cache* level1)
             r_or_w = 0;
         else
         {
-            cout<<"Wrong operation!"<<endl; //若操作不是r or w
+            cout<<"Wrong operation!"<<b<<addr<<endl; //若操作不是r or w
             return;
         }
 
@@ -58,8 +58,10 @@ void trace(Cache* level1)
         level1->visit(addr, visit_len, r_or_w);
   }
 
-  fclose(fp);    //  Maybe wrong
+  fclose(fp);
 }
+
+
 //LRU实现：给每个line结构体维护一个lastvisittime（long_int）
 //用constant写读入的参数；
 
@@ -123,18 +125,20 @@ void print_stat(int is_cache, const StorageStats &stats)
 {
 
     if (is_cache){
-        printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"
-            , stats.access_counter, stats.miss_num
-            , stats.access_time
-            , (double(stats.miss_num)/double(stats.access_counter))
-            , stats.replace_num, stats.access_lower_num);
+        printf("%d %f\n",stats.miss_num,double(stats.miss_num)/double(stats.access_counter));
     }
-    else{
-        printf("\tMem Access Counter = %d\n\tMem Access Time = %d\n"
-            , stats.access_counter
-            , stats.access_time);
-    }
-
+    // if (is_cache){
+    //     printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"
+    //         , stats.access_counter, stats.miss_num
+    //         , stats.access_time
+    //         , (double(stats.miss_num)/double(stats.access_counter))
+    //         , stats.replace_num, stats.access_lower_num);
+    // }
+    // else{
+    //     printf("\tMem Access Counter = %d\n\tMem Access Time = %d\n"
+    //         , stats.access_counter
+    //         , stats.access_time);
+    // }
 }
 
 int main(int argc, char  *argv[]) 
@@ -186,14 +190,15 @@ int main(int argc, char  *argv[])
 
 
     //Print stats
-    printf("STRACE: %s\n", PATH);
+
+    // printf("STRACE: %s\n", PATH);
 
     StorageStats stats;
-    cout << "--------" <<endl<<"Memory Stats:"<<endl;
+    // cout << "--------" <<endl<<"Memory Stats:"<<endl;
     memory->GetStats(stats);
     print_stat(IS_MEM, stats);
 
-    cout << "--------" <<endl<<"L1 Cache Stats:"<<endl;
+    // cout << "--------" <<endl<<"L1 Cache Stats:"<<endl;
     l1_cache->GetStats(stats);
     print_stat(IS_CACHE, stats);
 

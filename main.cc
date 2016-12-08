@@ -54,8 +54,6 @@ void trace(Cache* level1)
             return;
         }
 
-        printf("when trace!\n");
-
         int visit_len = 1;  // 我们先假设我们访问缓存时的数据大小总是小于block的大小
         level1->visit(addr, visit_len, r_or_w);
   }
@@ -127,7 +125,7 @@ void print_stat(int is_cache, const StorageStats &stats)
 {
 
     if (is_cache){
-        printf("%d %f\n",stats.miss_num,double(stats.miss_num)/double(stats.access_counter));
+        printf("%f\n",double(stats.miss_num)/double(stats.access_counter));
     }
     // if (is_cache){
     //     printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"

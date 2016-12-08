@@ -2,25 +2,42 @@
 
 # Only L1
 
-enable_l2=0
-enable_l3=0
 
-for J in {1..7}
+
+for cache_size_L1 in {2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576,2097152}
 do
-	cache_size_L1
-	block_size_L1
-	associativity_L1
+	for block_size_L1 in {64,128,256,1024,2048}
+	do
+	for associativity_L1 in {0,1,2,4,8}
+		do
+			bsas=$((${block_size_L1}*${associativity_L1}))
+			if [ ${cache_size_L1} -lt $bsas ]
+				then
+					echo 'wrong params'
+			else
+			# get latency
+			  l1_latency=`./cacti/cacti ${cache_size_L1} ${block_size_L1} ${associativity_L1}`
+			  if [ ''${l1_latency} == '' ]
+			  	then
+			  		echo ${cache_size_L1},${block_size_L1},${associativity_L1},'wrong params'
+			  else
+			  	if [ ${l1_latency} -lt 0 ]
+			  		then
+			  			echo ${cache_size_L1},${block_size_L1},${associativity_L1},'wrong params'
+			  	else
+						  miss_rate=`./sim ./trace/1.trace 0 0 0 100 \
+						  	${cache_size_L1} ${block_size_L1} ${associativity_L1} 0 ${l1_latency} \
+						  	0 0 0 0 0 \
+						  	0 0 0 0 0`
 
-# get latency
-  l1_latency=`./cacti/cacti $cache_size_L1 $block_size_L1 $associativity_L1`
-
-# get
-  ./sim ./trace/1.trace 0 0 0 100 \
-  	$cache_size_L1 $block_size_L1 $associativity_L1 0 4 \
-  	0 0 0 0 0 \
-  	0 0 0 0 0
-  I=$(($I*2))
+					  	echo ${cache_size_L1},${block_size_L1},${associativity_L1},0,${l1_latency},${miss_rate}
+					fi
+				fi
+			fi
+  	done
+  done
 done
+
 
 
 # L1 & L2

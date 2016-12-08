@@ -124,21 +124,21 @@ void set_memory_hierarchy(Memory* memory,
 void print_stat(int is_cache, const StorageStats &stats)
 {
 
-    if (is_cache){
-        printf("%f\n",double(stats.miss_num)/double(stats.access_counter));
-    }
     // if (is_cache){
-    //     printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"
-    //         , stats.access_counter, stats.miss_num
-    //         , stats.access_time
-    //         , (double(stats.miss_num)/double(stats.access_counter))
-    //         , stats.replace_num, stats.access_lower_num);
+    //     printf("%f\n",double(stats.miss_num)/double(stats.access_counter));
     // }
-    // else{
-    //     printf("\tMem Access Counter = %d\n\tMem Access Time = %d\n"
-    //         , stats.access_counter
-    //         , stats.access_time);
-    // }
+    if (is_cache){
+        printf("\tAccess Counter = %d\n\tMiss Num = %d\n\tAccess Time = %d\n\tMiss Rate =  %f\n\tReplace Num = %d\n\tAccess Lower Num = %d\n"
+            , stats.access_counter, stats.miss_num
+            , stats.access_time
+            , (double(stats.miss_num)/double(stats.access_counter))
+            , stats.replace_num, stats.access_lower_num);
+    }
+    else{
+        printf("\tMem Access Counter = %d\n\tMem Access Time = %d\n"
+            , stats.access_counter
+            , stats.access_time);
+    }
 }
 
 int main(int argc, char  *argv[]) 
@@ -196,11 +196,11 @@ int main(int argc, char  *argv[])
     // printf("STRACE: %s\n", PATH);
 
     StorageStats stats;
-    // cout << "--------" <<endl<<"Memory Stats:"<<endl;
+    cout << "--------" <<endl<<"Memory Stats:"<<endl;
     memory->GetStats(stats);
     print_stat(IS_MEM, stats);
 
-    // cout << "--------" <<endl<<"L1 Cache Stats:"<<endl;
+    cout << "--------" <<endl<<"L1 Cache Stats:"<<endl;
     l1_cache->GetStats(stats);
     print_stat(IS_CACHE, stats);
 

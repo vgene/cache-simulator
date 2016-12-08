@@ -54,6 +54,8 @@ void trace(Cache* level1)
             return;
         }
 
+        printf("when trace!\n");
+
         int visit_len = 1;  // 我们先假设我们访问缓存时的数据大小总是小于block的大小
         level1->visit(addr, visit_len, r_or_w);
   }
@@ -143,6 +145,7 @@ void print_stat(int is_cache, const StorageStats &stats)
 
 int main(int argc, char  *argv[]) 
 {
+
     //get Trace Name
     PATH = argv[1];
     /****Initialization Aruguments****/
@@ -153,6 +156,7 @@ int main(int argc, char  *argv[])
 
     // get arguments
     int enable_l2, enable_l3;
+    
     int cs[3], bs[3], as[3], bt[3], ht[3];
     int bt_mem, ht_mem;
 
@@ -160,7 +164,6 @@ int main(int argc, char  *argv[])
     enable_l3 = atoi(argv[3]); // 0 or 1
     bt_mem = atoi(argv[4]);
     ht_mem = atoi(argv[5]);
-
     int cnt=6; //read from argv[5]
     for (int i=0;i<3;i++){
         cs[i] = atoi(argv[cnt++]);
@@ -171,7 +174,6 @@ int main(int argc, char  *argv[])
     }
     //end of getting arguments
 
-
     //initialize memory and cache
     memory = make_memory(bt_mem, ht_mem);
     l1_cache = make_cache(cs[0], bs[0], as[0], bt[0], ht[0]);
@@ -181,6 +183,8 @@ int main(int argc, char  *argv[])
         l3_cache = make_cache(cs[2], bs[2], as[2], bt[2], ht[2]);
 
     set_memory_hierarchy(memory, l1_cache, l2_cache, l3_cache);
+
+
 
     trace(l1_cache);
 

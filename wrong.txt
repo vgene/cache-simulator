@@ -1,0 +1,180 @@
+2048,64,2,wrong params
+2048,64,4,wrong params
+2048,64,8,wrong params
+2048,128,2,wrong params
+2048,128,4,wrong params
+2048,128,8,wrong params
+2048,256,1,wrong params
+2048,256,2,wrong params
+2048,256,4,wrong params
+2048,256,8,wrong params
+2048,1024,1,wrong params
+2048,1024,2,wrong params
+2048 1024 4 wrong params - less
+2048 1024 8 wrong params - less
+2048,2048,0,wrong params
+2048,2048,1,wrong params
+2048 2048 2 wrong params - less
+2048 2048 4 wrong params - less
+2048 2048 8 wrong params - less
+4096,64,4,wrong params
+4096,64,8,wrong params
+4096,128,4,wrong params
+4096,128,8,wrong params
+4096,256,2,wrong params
+4096,256,4,wrong params
+4096,256,8,wrong params
+4096,1024,1,wrong params
+4096,1024,2,wrong params
+4096,1024,4,wrong params
+4096 1024 8 wrong params - less
+4096,2048,1,wrong params
+4096,2048,2,wrong params
+4096 2048 4 wrong params - less
+4096 2048 8 wrong params - less
+8192,64,8,wrong params
+8192,128,8,wrong params
+8192,256,4,wrong params
+8192,256,8,wrong params
+8192,1024,1,wrong params
+8192,1024,2,wrong params
+8192,1024,4,wrong params
+8192,1024,8,wrong params
+8192,2048,1,wrong params
+8192,2048,2,wrong params
+8192,2048,4,wrong params
+8192 2048 8 wrong params - less
+16384,256,8,wrong params
+16384,1024,2,wrong params
+16384,1024,4,wrong params
+16384,1024,8,wrong params
+16384,2048,1,wrong params
+16384,2048,2,wrong params
+16384,2048,4,wrong params
+16384,2048,8,wrong params
+32768,1024,4,wrong params
+32768,1024,8,wrong params
+32768,2048,2,wrong params
+32768,2048,4,wrong params
+32768,2048,8,wrong params
+65536,1024,8,wrong params
+65536,2048,4,wrong params
+65536,2048,8,wrong params
+131072,2048,8,wrong params
+2048,64,2,wrong params
+2048,64,4,wrong params
+2048,64,8,wrong params
+2048,128,2,wrong params
+2048,128,4,wrong params
+2048,128,8,wrong params
+2048,256,1,wrong params
+2048,256,2,wrong params
+2048,256,4,wrong params
+2048,256,8,wrong params
+2048,1024,1,wrong params
+2048,1024,2,wrong params
+2048 1024 4 wrong params - less
+2048 1024 8 wrong params - less
+2048,2048,0,wrong params
+2048,2048,1,wrong params
+2048 2048 2 wrong params - less
+2048 2048 4 wrong params - less
+2048 2048 8 wrong params - less
+4096,64,4,wrong params
+4096,64,8,wrong params
+4096,128,4,wrong params
+4096,128,8,wrong params
+4096,256,2,wrong params
+4096,256,4,wrong params
+4096,256,8,wrong params
+4096,1024,1,wrong params
+4096,1024,2,wrong params
+4096,1024,4,wrong params
+4096 1024 8 wrong params - less
+4096,2048,1,wrong params
+4096,2048,2,wrong params
+4096 2048 4 wrong params - less
+4096 2048 8 wrong params - less
+8192,64,8,wrong params
+8192,128,8,wrong params
+8192,256,4,wrong params
+8192,256,8,wrong params
+8192,1024,1,wrong params
+8192,1024,2,wrong params
+8192,1024,4,wrong params
+8192,1024,8,wrong params
+8192,2048,1,wrong params
+8192,2048,2,wrong params
+8192,2048,4,wrong params
+8192 2048 8 wrong params - less
+16384,256,8,wrong params
+16384,1024,2,wrong params
+16384,1024,4,wrong params
+16384,1024,8,wrong params
+16384,2048,1,wrong params
+16384,2048,2,wrong params
+16384,2048,4,wrong params
+16384,2048,8,wrong params
+32768,1024,4,wrong params
+32768,1024,8,wrong params
+32768,2048,2,wrong params
+32768,2048,4,wrong params
+32768,2048,8,wrong params
+65536,1024,8,wrong params
+65536,2048,4,wrong params
+65536,2048,8,wrong params
+131072,2048,8,wrong params
+L2:16384,256,8,wrong params
+L2:16384,1024,2,wrong params
+L2:16384,1024,4,wrong params
+L2:16384,1024,8,wrong params
+L2:16384,2048,1,wrong params
+L2:16384,2048,2,wrong params
+L2:16384,2048,4,wrong params
+L2:16384,2048,8,wrong params
+L2:32768,1024,4,wrong params
+L2:32768,1024,8,wrong params
+L2:32768,2048,2,wrong params
+L2:32768,2048,4,wrong params
+L2:32768,2048,8,wrong params
+L2:65536,1024,8,wrong params
+L2:65536,2048,4,wrong params
+L2:65536,2048,8,wrong params
+L2:131072,2048,8,wrong params
+L2:16384,256,8,wrong params
+L2:16384,1024,2,wrong params
+L2:16384,1024,4,wrong params
+L2:16384,1024,8,wrong params
+L2:16384,2048,1,wrong params
+L2:16384,2048,2,wrong params
+L2:16384,2048,4,wrong params
+L2:16384,2048,8,wrong params
+L2:32768,1024,4,wrong params
+L2:32768,1024,8,wrong params
+L2:32768,2048,2,wrong params
+L2:32768,2048,4,wrong params
+L2:32768,2048,8,wrong params
+L2:65536,1024,8,wrong params
+L2:65536,2048,4,wrong params
+L2:65536,2048,8,wrong params
+L2:131072,2048,8,wrong params
+L1:2048,64,2,wrong params
+L1:2048,64,4,wrong params
+L1:2048,64,8,wrong params
+L2:16384,256,8,wrong params
+L2:16384,1024,2,wrong params
+L2:16384,1024,4,wrong params
+L2:16384,1024,8,wrong params
+L2:16384,2048,1,wrong params
+L2:16384,2048,2,wrong params
+L2:16384,2048,4,wrong params
+L2:16384,2048,8,wrong params
+L2:32768,1024,4,wrong params
+L2:32768,1024,8,wrong params
+L2:32768,2048,2,wrong params
+L2:32768,2048,4,wrong params
+L2:32768,2048,8,wrong params
+L2:65536,1024,8,wrong params
+L2:65536,2048,4,wrong params
+L2:65536,2048,8,wrong params
+L2:131072,2048,8,wrong params
